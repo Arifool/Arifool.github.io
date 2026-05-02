@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Md Ariful Islam — CSE & Data Science</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #080C12;
+      --bg2:      #0E1420;
+      --bg3:      #141C2C;
+      --blue:     #3B82F6;
+      --blue2:    #60A5FA;
+      --cyan:     #06B6D4;
+      --text:     #E8EDF5;
+      --muted:    #7A8BA6;
+      --border:   rgba(59,130,246,0.15);
+      --glow:     rgba(59,130,246,0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(8,12,18,0.75);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.15rem;
+      color: var(--blue2);
+      letter-spacing: -0.01em;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.85rem; font-weight: 500;
+      color: var(--muted); text-decoration: none;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 8rem 4rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .orb1 { width: 600px; height: 600px; top: -100px; right: -100px; background: radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%); }
+    .orb2 { width: 400px; height: 400px; bottom: 0; left: 10%; background: radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%); }
+
+    .hero-content { position: relative; z-index: 1; max-width: 700px; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      border: 1px solid var(--border);
+      background: rgba(59,130,246,0.08);
+      padding: 0.35rem 0.9rem;
+      border-radius: 100px;
+      font-size: 0.8rem; font-weight: 500;
+      color: var(--blue2); letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-tag::before { content: '●'; font-size: 0.5rem; color: var(--cyan); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 800; line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.3rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .name-line2 {
+      background: linear-gradient(135deg, var(--blue2), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-role {
+      font-size: 1.1rem; font-weight: 300;
+      color: var(--muted); margin: 1.2rem 0 2rem;
+      line-height: 1.6;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-role strong { color: var(--text); font-weight: 500; }
+
+    .hero-btns {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-size: 0.9rem; font-weight: 500;
+      text-decoration: none;
+      transition: all .25s;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--blue); color: #fff;
+      border: 1px solid var(--blue);
+      box-shadow: 0 0 20px var(--glow);
+    }
+    .btn-primary:hover { background: var(--blue2); box-shadow: 0 0 30px rgba(59,130,246,0.4); transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--blue); color: var(--blue2); transform: translateY(-1px); }
+
+    .hero-stats {
+      display: flex; gap: 3rem; margin-top: 4rem;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem; font-weight: 700;
+      color: var(--blue2);
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 6rem 4rem; position: relative; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 600;
+      color: var(--blue); letter-spacing: 0.15em;
+      text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700; letter-spacing: -0.02em;
+      margin-bottom: 3rem; line-height: 1.15;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--bg2); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: start;
+      max-width: 1100px;
+    }
+    .about-text p {
+      color: var(--muted); line-height: 1.8; font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .about-text p strong { color: var(--text); }
+    .about-facts { display: flex; flex-direction: column; gap: 1rem; }
+    .fact-row {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .fact-icon { font-size: 1.3rem; }
+    .fact-label { font-size: 0.75rem; color: var(--muted); }
+    .fact-val { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+
+    /* ── SKILLS ── */
+    #skills { background: var(--bg); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem; max-width: 1100px;
+    }
+    .skill-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: border-color .25s, transform .25s;
+    }
+    .skill-card:hover { border-color: var(--blue); transform: translateY(-3px); }
+    .skill-card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem; font-weight: 700;
+      color: var(--blue2); letter-spacing: 0.05em;
+      text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag {
+      padding: 0.3rem 0.75rem;
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 100px;
+      font-size: 0.8rem; color: var(--text);
+    }
+
+    /* ── EDUCATION ── */
+    #education { background: var(--bg2); }
+    .edu-timeline { display: flex; flex-direction: column; gap: 1.5rem; max-width: 800px; }
+    .edu-card {
+      display: grid; grid-template-columns: 100px 1fr;
+      gap: 1.5rem; align-items: start;
+    }
+    .edu-year {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem; font-weight: 700;
+      color: var(--blue); text-align: right;
+      padding-top: 0.2rem;
+    }
+    .edu-body {
+      padding: 1.25rem 1.5rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--blue);
+      border-radius: 0 12px 12px 0;
+    }
+    .edu-degree {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      color: var(--text); margin-bottom: 0.25rem;
+    }
+    .edu-inst { font-size: 0.85rem; color: var(--blue2); margin-bottom: 0.25rem; }
+    .edu-gpa {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      background: rgba(6,182,212,0.1);
+      border: 1px solid rgba(6,182,212,0.25);
+      border-radius: 100px;
+      font-size: 0.78rem; color: var(--cyan);
+    }
+
+    /* ── PROJECTS ── */
+    #projects { background: var(--bg); }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem; max-width: 1100px;
+    }
+    .proj-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      transition: border-color .25s, transform .25s;
+      position: relative; overflow: hidden;
+    }
+    .proj-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      opacity: 0; transition: opacity .25s;
+    }
+    .proj-card:hover { border-color: var(--blue); transform: translateY(-4px); }
+    .proj-card:hover::before { opacity: 1; }
+    .proj-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+    .proj-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--text); margin-bottom: 0.5rem;
+    }
+    .proj-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.7; margin-bottom: 1rem; }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .proj-tag {
+      padding: 0.2rem 0.6rem;
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.15);
+      border-radius: 4px;
+      font-size: 0.73rem; color: var(--blue2);
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--bg2);
+      text-align: center;
+    }
+    .contact-inner { max-width: 600px; margin: 0 auto; }
+    .contact-inner .section-title { margin-bottom: 1rem; }
+    .contact-inner p { color: var(--muted); font-size: 0.95rem; margin-bottom: 2.5rem; line-height: 1.7; }
+    .contact-links {
+      display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .contact-link {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1.4rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem; color: var(--text);
+      text-decoration: none;
+      transition: all .2s;
+    }
+    .contact-link:hover { border-color: var(--blue); color: var(--blue2); background: rgba(59,130,246,0.05); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center; padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem; color: var(--muted);
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      section, #hero { padding: 4rem 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">Ariful Islam</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="orb1 hero-orb"></div>
+    <div class="orb2 hero-orb"></div>
+    <div class="hero-content">
+      <div class="hero-tag">Available for Internships &amp; Entry-Level Roles</div>
+      <h1>
+        Md Ariful<br>
+        <span class="name-line2">Islam</span>
+      </h1>
+      <p class="hero-role">
+        Final-year <strong>CSE student</strong> majoring in <strong>Data Science</strong> at East West University.<br>
+        Passionate about Machine Learning, Data Analysis &amp; Software Development.
+      </p>
+      <div class="hero-btns">
+        <a href="#projects" class="btn btn-primary">View My Work →</a>
+        <a href="#contact" class="btn btn-outline">Get In Touch</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">3.31</div>
+          <div class="stat-label">University GPA</div>
+        </div>
+        <div>
+          <div class="stat-num">5.0</div>
+          <div class="stat-label">HSC GPA</div>
+        </div>
+        <div>
+          <div class="stat-num">3+</div>
+          <div class="stat-label">Research Papers Studied</div>
+        </div>
+        <div>
+          <div class="stat-num">2026</div>
+          <div class="stat-label">Graduating</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-label">About Me</div>
+    <h2 class="section-title">Who I Am</h2>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>I'm a final-year Computer Science &amp; Engineering student at <strong>East West University, Dhaka</strong>, majoring in <strong>Data Science</strong>. I'm driven by a deep interest in how data can solve real-world problems.</p>
+        <p>My academic journey has given me strong foundations in <strong>machine learning, data analysis, Python, SQL</strong>, and software development. I enjoy working on research-backed projects and building things that matter.</p>
+        <p>Outside academics, I actively lead and participate in university clubs — from Performing Arts to Robotics — and volunteer in social initiatives, which keeps my <strong>leadership and collaboration skills</strong> sharp.</p>
+        <p>I'm currently seeking <strong>internships and entry-level roles</strong> in data science, ML engineering, or software development where I can make a real contribution from day one.</p>
+      </div>
+      <div class="about-facts">
+        <div class="fact-row">
+          <div class="fact-icon">🎓</div>
+          <div>
+            <div class="fact-label">Degree</div>
+            <div class="fact-val">B.Sc. CSE — Data Science Major</div>
+          </div>
+        </div>
+        <div class="fact-row">
+          <div class="fact-icon">📍</div>
+          <div>
+            <div class="fact-label">Location</div>
+            <div class="fact-val">Dhaka, Bangladesh</div>
+          </div>
+        </div>
+        <div class="fact-row">
+          <div class="fact-icon">📧</div>
+          <div>
+            <div class="fact-label">Email</div>
+            <div class="fact-val">ariful.islam.sobuj.243@gmail.com</div>
+          </div>
+        </div>
+        <div class="fact-row">
+          <div class="fact-icon">📱</div>
+          <div>
+            <div class="fact-label">Phone</div>
+            <div class="fact-val">01975249226</div>
+          </div>
+        </div>
+        <div class="fact-row">
+          <div class="fact-icon">🌐</div>
+          <div>
+            <div class="fact-label">Language</div>
+            <div class="fact-val">Bengali (Native) · English (C1 Advanced)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-label">Technical Skills</div>
+    <h2 class="section-title">What I Work With</h2>
+    <div class="skills-grid reveal">
+      <div class="skill-card">
+        <div class="skill-card-title">💻 Programming</div>
+        <div class="skill-tags">
+          <span class="tag">Python</span><span class="tag">C</span><span class="tag">C++</span>
+          <span class="tag">SQL</span><span class="tag">HTML</span><span class="tag">CSS</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">📊 Data Science</div>
+        <div class="skill-tags">
+          <span class="tag">Pandas</span><span class="tag">NumPy</span><span class="tag">Scikit-learn</span>
+          <span class="tag">Matplotlib</span><span class="tag">Seaborn</span><span class="tag">Jupyter</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">🤖 Machine Learning</div>
+        <div class="skill-tags">
+          <span class="tag">Supervised Learning</span><span class="tag">Unsupervised Learning</span>
+          <span class="tag">EDA</span><span class="tag">Feature Engineering</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">🗄️ Databases</div>
+        <div class="skill-tags">
+          <span class="tag">MySQL</span><span class="tag">SQLite</span>
+          <span class="tag">Schema Design</span><span class="tag">Data Cleaning</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">🛠️ Tools</div>
+        <div class="skill-tags">
+          <span class="tag">Git</span><span class="tag">GitHub</span>
+          <span class="tag">VS Code</span><span class="tag">Google Colab</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">🤝 Soft Skills</div>
+        <div class="skill-tags">
+          <span class="tag">Leadership</span><span class="tag">Team Collaboration</span>
+          <span class="tag">Public Speaking</span><span class="tag">Analytical Thinking</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="section-label">Education</div>
+    <h2 class="section-title">Academic Background</h2>
+    <div class="edu-timeline reveal">
+      <div class="edu-card">
+        <div class="edu-year">2022–2026</div>
+        <div class="edu-body">
+          <div class="edu-degree">B.Sc. in Computer Science &amp; Engineering</div>
+          <div class="edu-inst">East West University, Dhaka — Major: Data Science</div>
+          <span class="edu-gpa">GPA: 3.31 / 4.00</span>
+        </div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-year">2020</div>
+        <div class="edu-body">
+          <div class="edu-degree">Higher Secondary Certificate (HSC)</div>
+          <div class="edu-inst">St. Gregory's High School & College, Dhaka Board</div>
+          <span class="edu-gpa">GPA: 5.00 / 5.00 ⭐ Perfect Score</span>
+        </div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-year">2018</div>
+        <div class="edu-body">
+          <div class="edu-degree">Secondary School Certificate (SSC)</div>
+          <div class="edu-inst">Jatrabari Ideal School & College, Dhaka Board</div>
+          <span class="edu-gpa">GPA: 4.89 / 5.00</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-label">Projects &amp; Research</div>
+    <h2 class="section-title">What I've Built</h2>
+    <div class="projects-grid reveal">
+      <div class="proj-card">
+        <div class="proj-icon">🔬</div>
+        <div class="proj-title">Undergraduate Dissertation (Ongoing)</div>
+        <div class="proj-desc">Data-driven research applying machine learning models to a real-world problem. Synthesized findings from 3–4 academic papers and built a Python-based ML pipeline with preprocessing, training, and evaluation.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">Python</span><span class="proj-tag">Machine Learning</span>
+          <span class="proj-tag">Scikit-learn</span><span class="proj-tag">Research</span>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-icon">📈</div>
+        <div class="proj-title">Data Analysis &amp; EDA Projects</div>
+        <div class="proj-desc">Conducted multiple exploratory data analysis projects: cleaned messy datasets, generated insights using Pandas and NumPy, and created compelling visualizations with Matplotlib and Seaborn.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">Pandas</span><span class="proj-tag">NumPy</span>
+          <span class="proj-tag">Matplotlib</span><span class="proj-tag">EDA</span>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-icon">🗃️</div>
+        <div class="proj-title">Database Design &amp; SQL Projects</div>
+        <div class="proj-desc">Designed relational database schemas for real-world scenarios, wrote complex SQL queries for data retrieval and manipulation, and optimized data storage structures using MySQL and SQLite.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">MySQL</span><span class="proj-tag">SQLite</span>
+          <span class="proj-tag">SQL</span><span class="proj-tag">Schema Design</span>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-icon">⚙️</div>
+        <div class="proj-title">Software Development Coursework</div>
+        <div class="proj-desc">Built software projects using Python and OOP principles, implementing data structures, algorithms, and modular system design. Focus on clean code, problem-solving, and scalable architecture.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">Python</span><span class="proj-tag">OOP</span>
+          <span class="proj-tag">Algorithms</span><span class="proj-tag">C++</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-inner reveal">
+      <div class="section-label">Get In Touch</div>
+      <h2 class="section-title">Let's Connect</h2>
+      <p>I'm actively looking for internship and entry-level opportunities in data science, machine learning, and software development. Whether you have an opportunity, a project, or just want to connect — my inbox is open!</p>
+      <div class="contact-links">
+        <a class="contact-link" href="mailto:ariful.islam.sobuj.243@gmail.com">📧 Email Me</a>
+        <a class="contact-link" href="https://github.com/Arifool" target="_blank">🐙 GitHub</a>
+        <a class="contact-link" href="https://linkedin.com/in/md-ariful-islam" target="_blank">💼 LinkedIn</a>
+        <a class="contact-link" href="tel:01975249226">📱 Call Me</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Md Ariful Islam · Built with passion and deployed on GitHub Pages</p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+  </script>
+</body>
+</html>
